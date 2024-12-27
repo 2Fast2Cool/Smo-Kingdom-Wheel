@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spinning Wheel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .wheel-container {
+            margin: 40px auto;
+            position: relative;
+        }
+        #wheel {
+            display: block;
+            margin: 0 auto;
+            border: 3px solid #000;
+        }
+        #spin-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        #spin-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        input, button, select {
+            margin: 10px;
+        }
+        #disabled-names-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Spinning Wheel</h1>
+
+    <div class="wheel-container">
+        <canvas id="wheel" width="500" height="500"></canvas>
+        <button id="spin-button" onclick="spinWheel()">Spin</button>
+
+        <h3>Add Custom Name</h3>
+        <input type="text" id="custom-name-input" placeholder="Enter a name">
+        <button onclick="addCustomName()">Add Name</button>
+
+        <h3>Disable/Enable Name</h3>
+        <select id="name-selector"></select>
+        <button onclick="toggleNameStatus()">Disable/Enable Name</button>
+
+        <h3>Disabled Names</h3>
+        <pre id="disabled-names-list">No names disabled yet.</pre>
+    </div>
+
+    <script>
+        let names = ["Diya", "Charles", "Beatriz", "Ali", "Hanna", "Gabriel", "Fatima", "Eric"];
+        let disabledNames = [];
+        const nameSelector = document.getElementById("name-selector");
+        const disabledNamesList = document.getElementById("disabled-names-list");
+        const spinButton = document.getElementById("spin-button");
+        const canvas = document.getElementById("wheel");
+        const ctx = canvas.getContext("2d");
+
+        function drawWheel() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const sliceAngle = (2 * Math.PI) / names.length;
+
+            names.forEach((name, i) => {
+                const startAngle = i * sliceAngle;
+                const endAngle = startAngle + sliceAngle;
+
+                ctx.beginPath();
+                ctx.moveTo(canvas.width / 2, canvas.height / 2);
+                ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = i % 2 === 0 ? "#FFDDC1" : "#FFABAB";
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(startAngle + sliceAngle / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "#000";
+                ctx.font = "16px Arial";
+                ctx.fillText(name, canvas.width / 2 - 20, 10);
+                ctx.restore();
+            });
+
+            spinButton.disabled = names.length === 0;
+        }
+
+        function spinWheel() {
+            if (names.length === 0) {
+                alert("No names to spin.");
+                return;
+            }
+            const randomIndex = Math.floor(Math.random() * names.length);
+            alert(`Winner: ${names[randomIndex]}!`);
+        }
+
+        function addCustomName() {
+            const input = document.getElementById("custom-name-input");
+            const name = input.value.trim();
+            if (name && !names.includes(name)) {
+                names.push(name);
+                populateNameSelector();
+                drawWheel();
+            }
+            input.value = "";
+        }
+
+        function toggleNameStatus() {
+            const selectedName = nameSelector.value;
+            if (!selectedName) return;
+
+            if (disabledNames.includes(selectedName)) {
+                disabledNames = disabledNames.filter(name => name !== selectedName);
+                names.push(selectedName);
+            } else {
+                disabledNames.push(selectedName);
+                names = names.filter(name => name !== selectedName);
+            }
+            populateNameSelector();
+            updateDisabledNamesList();
+            drawWheel();
+        }
+
+        function updateDisabledNamesList() {
+            disabledNamesList.textContent = disabledNames.length
+                ? disabledNames.join("\n")
+                : "No names disabled yet.";
+        }
+
+        function populateNameSelector() {
+            nameSelector.innerHTML = "";
+            [...names, ...disabledNames].forEach(name => {
+                const option = document.createElement("option");
+                option.value = name;
+                option.textContent = name;
+                nameSelector.appendChild(option);
+            });
+        }
+
+        populateNameSelector();
+        drawWheel();
+    </script>
+</body>
+</html>
