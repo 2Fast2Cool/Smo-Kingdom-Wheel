@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Image Selector</title>
+    <title>Image Picker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,8 +16,8 @@
             display: inline-block;
         }
         #random-image {
-            max-width: 600px;  /* Increase max-width */
-            max-height: 600px; /* Increase max-height */
+            max-width: 600px;
+            max-height: 600px;
             margin-bottom: 20px;
         }
         select, button {
@@ -30,7 +30,7 @@
     </style>
 </head>
 <body>
-    <h1>Super Mario Odyssey Wheel</h1>
+    <h1>Super Mario Odyssey Image Picker</h1>
 
     <!-- Display random image -->
     <div id="image-container">
@@ -41,17 +41,13 @@
 
     <h3>Disable/Enable Image</h3>
     <label for="image-selector">Select Image: </label>
-    <select id="image-selector">
-        <!-- Options will be populated by JavaScript -->
-    </select>
-
+    <select id="image-selector"></select>
     <button onclick="toggleImageStatus()">Disable/Enable Image</button>
 
     <h3>Disabled Images</h3>
     <pre id="disabled-images-list">No images disabled yet.</pre>
 
     <script>
-        // Image data with file names and display names
         const allImages = [
             { file: "CapKingdom_Header.webp", displayName: "Cap Kingdom" },
             { file: "CascadeKingdom_Header.webp", displayName: "Cascade Kingdom" },
@@ -69,28 +65,25 @@
             { file: "MushroomKingdom_Header.webp", displayName: "Mushroom Kingdom" },
             { file: "DarkSideKingdom_Header.webp", displayName: "Dark Side Kingdom" },
             { file: "DarkderSideKingdom_Header.webp", displayName: "Darkder Side Kingdom" },
-            { file: "DeepWoods_Header.webp", displayName: "Deep Woods" }  // New entry for Deep Woods
+            { file: "DeepWoods_Header.webp", displayName: "Deep Woods" }
         ];
 
         let disabledImages = [];
 
-        // Initialize the image selector dropdown
         const imageSelector = document.getElementById("image-selector");
         const randomImageElement = document.getElementById("random-image");
         const disabledImagesListElement = document.getElementById("disabled-images-list");
 
-        // Populate the dropdown with all images
         function populateImageSelector() {
             imageSelector.innerHTML = '';
             allImages.forEach(image => {
                 const option = document.createElement("option");
-                option.value = image.file;  // The value is the file name
-                option.textContent = image.displayName;  // The display name is shown
+                option.value = image.file;
+                option.textContent = image.displayName;
                 imageSelector.appendChild(option);
             });
         }
 
-        // Function to pick and display a random image from enabled ones
         function pickRandomImage() {
             const enabledImages = allImages.filter(image => !disabledImages.includes(image.file));
             if (enabledImages.length === 0) {
@@ -99,23 +92,19 @@
             }
             const randomIndex = Math.floor(Math.random() * enabledImages.length);
             const randomImage = enabledImages[randomIndex];
-            randomImageElement.src = "images/" + randomImage.file;  // Use the file name for the source
+            randomImageElement.src = "images/" + randomImage.file;
         }
 
-        // Function to toggle the disabled status of an image
         function toggleImageStatus() {
             const selectedImageFile = imageSelector.value;
             if (disabledImages.includes(selectedImageFile)) {
-                // Enable the image
                 disabledImages = disabledImages.filter(image => image !== selectedImageFile);
             } else {
-                // Disable the image
                 disabledImages.push(selectedImageFile);
             }
             updateDisabledImagesList();
         }
 
-        // Function to update the list of disabled images
         function updateDisabledImagesList() {
             if (disabledImages.length === 0) {
                 disabledImagesListElement.textContent = "No images disabled yet.";
@@ -129,9 +118,7 @@
             }
         }
 
-        // Initialize the page
         populateImageSelector();
-
     </script>
 </body>
 </html>
