@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMO wheel </title>
+    <title>Random Image Selector</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,7 +34,7 @@
 
     <!-- Display random image -->
     <div id="image-container">
-        <img id="random-image" src="" alt="Random Image">
+        <img id="random-image" src="" alt="Random Image" onerror="this.onerror=null; this.src='fallback_image.jpg';">
     </div>
 
     <button onclick="pickRandomImage()">Pick Random Image</button>
@@ -51,23 +51,32 @@
     <pre id="disabled-images-list">No images disabled yet.</pre>
 
     <script>
-        let allImages = [];
+        // Image files (This will be dynamically populated if you fetch the file list from a server)
+        const allImages = [
+            "CapKingdom_Header.webp",
+            "CascadeKingdom_Header.webp",
+            "SandKingdom_Header.webp",
+            "LakeKingdom_Header.webp",
+            "WoodedKingdom_Header.webp",
+            "CloudKingdom_Header.webp",
+            "LostKingdom_Header.webp",
+            "MetroKingdom_Header.webp",
+            "SnowKingdom_Header.webp",
+            "SeasideKingdom_Header.webp",
+            "LuncheonKingdom_Header.webp",
+            "RuinedKingdom_Header.webp",
+            "BowsersKingdom_Header.webp",
+            "MushroomKingdom_Header.webp",
+            "DarkSideKingdom_Header.webp",
+            "DarkderSideKingdom_Header.webp"
+        ];
+
         let disabledImages = [];
 
+        // Initialize the image selector dropdown
         const imageSelector = document.getElementById("image-selector");
         const randomImageElement = document.getElementById("random-image");
         const disabledImagesListElement = document.getElementById("disabled-images-list");
-
-        // Fetch image list from the server
-        fetch('/get-image-list')
-            .then(response => response.json())
-            .then(images => {
-                allImages = images;
-                populateImageSelector();
-            })
-            .catch(error => {
-                console.error('Error fetching image list:', error);
-            });
 
         // Populate the dropdown with all images
         function populateImageSelector() {
@@ -89,7 +98,7 @@
             }
             const randomIndex = Math.floor(Math.random() * enabledImages.length);
             const randomImage = enabledImages[randomIndex];
-            randomImageElement.src = "/images/" + randomImage;  // Adjust the path to your image folder
+            randomImageElement.src = "images/" + randomImage;  // Adjust the path if needed
         }
 
         // Function to toggle the disabled status of an image
@@ -113,6 +122,10 @@
                 disabledImagesListElement.textContent = disabledImages.join("\n");
             }
         }
+
+        // Initialize the page
+        populateImageSelector();
+
     </script>
 </body>
 </html>
