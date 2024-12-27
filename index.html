@@ -16,8 +16,8 @@
             display: inline-block;
         }
         #random-image {
-            max-width: 300px;
-            max-height: 300px;
+            max-width: 600px;  /* Increase max-width */
+            max-height: 600px; /* Increase max-height */
             margin-bottom: 20px;
         }
         select, button {
@@ -30,7 +30,7 @@
     </style>
 </head>
 <body>
-    <h1>Random Image Selector</h1>
+    <h1>Super Mario Odyssey Wheel</h1>
 
     <!-- Display random image -->
     <div id="image-container">
@@ -51,24 +51,25 @@
     <pre id="disabled-images-list">No images disabled yet.</pre>
 
     <script>
-        // Image files (This will be dynamically populated if you fetch the file list from a server)
+        // Image data with file names and display names
         const allImages = [
-            "CapKingdom_Header.webp",
-            "CascadeKingdom_Header.webp",
-            "SandKingdom_Header.webp",
-            "LakeKingdom_Header.webp",
-            "WoodedKingdom_Header.webp",
-            "CloudKingdom_Header.webp",
-            "LostKingdom_Header.webp",
-            "MetroKingdom_Header.webp",
-            "SnowKingdom_Header.webp",
-            "SeasideKingdom_Header.webp",
-            "LuncheonKingdom_Header.webp",
-            "RuinedKingdom_Header.webp",
-            "BowsersKingdom_Header.webp",
-            "MushroomKingdom_Header.webp",
-            "DarkSideKingdom_Header.webp",
-            "DarkderSideKingdom_Header.webp"
+            { file: "CapKingdom_Header.webp", displayName: "Cap Kingdom" },
+            { file: "CascadeKingdom_Header.webp", displayName: "Cascade Kingdom" },
+            { file: "SandKingdom_Header.webp", displayName: "Sand Kingdom" },
+            { file: "LakeKingdom_Header.webp", displayName: "Lake Kingdom" },
+            { file: "WoodedKingdom_Header.webp", displayName: "Wooded Kingdom" },
+            { file: "CloudKingdom_Header.webp", displayName: "Cloud Kingdom" },
+            { file: "LostKingdom_Header.webp", displayName: "Lost Kingdom" },
+            { file: "MetroKingdom_Header.webp", displayName: "Metro Kingdom" },
+            { file: "SnowKingdom_Header.webp", displayName: "Snow Kingdom" },
+            { file: "SeasideKingdom_Header.webp", displayName: "Seaside Kingdom" },
+            { file: "LuncheonKingdom_Header.webp", displayName: "Luncheon Kingdom" },
+            { file: "RuinedKingdom_Header.webp", displayName: "Ruined Kingdom" },
+            { file: "BowsersKingdom_Header.webp", displayName: "Bowser's Kingdom" },
+            { file: "MushroomKingdom_Header.webp", displayName: "Mushroom Kingdom" },
+            { file: "DarkSideKingdom_Header.webp", displayName: "Dark Side Kingdom" },
+            { file: "DarkderSideKingdom_Header.webp", displayName: "Darkder Side Kingdom" },
+            { file: "DeepWoods_Header.webp", displayName: "Deep Woods" }  // New entry for Deep Woods
         ];
 
         let disabledImages = [];
@@ -83,33 +84,33 @@
             imageSelector.innerHTML = '';
             allImages.forEach(image => {
                 const option = document.createElement("option");
-                option.value = image;
-                option.textContent = image;
+                option.value = image.file;  // The value is the file name
+                option.textContent = image.displayName;  // The display name is shown
                 imageSelector.appendChild(option);
             });
         }
 
         // Function to pick and display a random image from enabled ones
         function pickRandomImage() {
-            const enabledImages = allImages.filter(image => !disabledImages.includes(image));
+            const enabledImages = allImages.filter(image => !disabledImages.includes(image.file));
             if (enabledImages.length === 0) {
                 alert("No images left to choose from.");
                 return;
             }
             const randomIndex = Math.floor(Math.random() * enabledImages.length);
             const randomImage = enabledImages[randomIndex];
-            randomImageElement.src = "images/" + randomImage;  // Adjust the path if needed
+            randomImageElement.src = "images/" + randomImage.file;  // Use the file name for the source
         }
 
         // Function to toggle the disabled status of an image
         function toggleImageStatus() {
-            const selectedImage = imageSelector.value;
-            if (disabledImages.includes(selectedImage)) {
+            const selectedImageFile = imageSelector.value;
+            if (disabledImages.includes(selectedImageFile)) {
                 // Enable the image
-                disabledImages = disabledImages.filter(image => image !== selectedImage);
+                disabledImages = disabledImages.filter(image => image !== selectedImageFile);
             } else {
                 // Disable the image
-                disabledImages.push(selectedImage);
+                disabledImages.push(selectedImageFile);
             }
             updateDisabledImagesList();
         }
@@ -119,7 +120,12 @@
             if (disabledImages.length === 0) {
                 disabledImagesListElement.textContent = "No images disabled yet.";
             } else {
-                disabledImagesListElement.textContent = disabledImages.join("\n");
+                const disabledDisplayNames = disabledImages
+                    .map(file => {
+                        const image = allImages.find(image => image.file === file);
+                        return image ? image.displayName : file;
+                    });
+                disabledImagesListElement.textContent = disabledDisplayNames.join("\n");
             }
         }
 
