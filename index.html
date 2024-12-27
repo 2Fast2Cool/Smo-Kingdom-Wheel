@@ -3,122 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Picker</title>
+    <title>Image Picker and Wheel</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
         }
-        #image-container {
-            margin: 20px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            display: inline-block;
-        }
         #random-image {
-            max-width: 600px;
-            max-height: 600px;
-            margin-bottom: 20px;
+            max-width: 500px;
+            width: 100%;
         }
-        select, button {
+        select, input, button {
             margin: 10px;
         }
         #disabled-images-list {
-            margin-top: 20px;
             text-align: left;
+        }
+        #color-picker-container {
+            margin-top: 20px;
+        }
+        #image-selector {
+            width: 50%;
+            margin-top: 20px;
+        }
+        #image-upload-container {
+            margin-top: 20px;
+        }
+        .image-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .image-item button {
+            margin-left: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Super Mario Odyssey Image Picker</h1>
+    <h1>Image Picker</h1>
 
-    <!-- Display random image -->
-    <div id="image-container">
-        <img id="random-image" src="" alt="Random Image" onerror="this.onerror=null; this.src='fallback_image.jpg';">
+    <!-- Background Color Picker -->
+    <div id="color-picker-container">
+        <h3>Pick a Background Color</h3>
+        <input type="color" id="background-color-picker" />
     </div>
 
+    <!-- Custom Image Upload -->
+    <div id="image-upload-container">
+        <h3>Add Custom Image</h3>
+        <input type="file" id="image-upload-input" accept="image/*">
+        <input type="text" id="image-name-input" placeholder="Enter Image Display Name">
+        <button id="add-image-button" onclick="addCustomImage()">Add Image</button>
+    </div>
+
+    <!-- Image Selector -->
+    <h3>Choose Image</h3>
+    <select id="image-selector"></select>
     <button onclick="pickRandomImage()">Pick Random Image</button>
 
-    <h3>Disable/Enable Image</h3>
-    <label for="image-selector">Select Image: </label>
-    <select id="image-selector"></select>
-    <button onclick="toggleImageStatus()">Disable/Enable Image</button>
+    <!-- Random Image Display -->
+    <h3>Random Image</h3>
+    <img id="random-image" src="" alt="Random Image" />
 
+    <!-- Disabled Images List -->
     <h3>Disabled Images</h3>
     <pre id="disabled-images-list">No images disabled yet.</pre>
 
-    <script>
-        const allImages = [
-            { file: "CapKingdom_Header.webp", displayName: "Cap Kingdom" },
-            { file: "CascadeKingdom_Header.webp", displayName: "Cascade Kingdom" },
-            { file: "SandKingdom_Header.webp", displayName: "Sand Kingdom" },
-            { file: "LakeKingdom_Header.webp", displayName: "Lake Kingdom" },
-            { file: "WoodedKingdom_Header.webp", displayName: "Wooded Kingdom" },
-            { file: "CloudKingdom_Header.webp", displayName: "Cloud Kingdom" },
-            { file: "LostKingdom_Header.webp", displayName: "Lost Kingdom" },
-            { file: "MetroKingdom_Header.webp", displayName: "Metro Kingdom" },
-            { file: "SnowKingdom_Header.webp", displayName: "Snow Kingdom" },
-            { file: "SeasideKingdom_Header.webp", displayName: "Seaside Kingdom" },
-            { file: "LuncheonKingdom_Header.webp", displayName: "Luncheon Kingdom" },
-            { file: "RuinedKingdom_Header.webp", displayName: "Ruined Kingdom" },
-            { file: "BowsersKingdom_Header.webp", displayName: "Bowser's Kingdom" },
-            { file: "MushroomKingdom_Header.webp", displayName: "Mushroom Kingdom" },
-            { file: "DarkSideKingdom_Header.webp", displayName: "Dark Side Kingdom" },
-            { file: "DarkderSideKingdom_Header.webp", displayName: "Darkder Side Kingdom" },
-            { file: "DeepWoods_Header.webp", displayName: "Deep Woods" }
-        ];
+    <!-- Image List with Delete Button -->
+    <h3>Image List</h3>
+    <div id="image-list"></div>
 
-        let disabledImages = [];
-
-        const imageSelector = document.getElementById("image-selector");
-        const randomImageElement = document.getElementById("random-image");
-        const disabledImagesListElement = document.getElementById("disabled-images-list");
-
-        function populateImageSelector() {
-            imageSelector.innerHTML = '';
-            allImages.forEach(image => {
-                const option = document.createElement("option");
-                option.value = image.file;
-                option.textContent = image.displayName;
-                imageSelector.appendChild(option);
-            });
-        }
-
-        function pickRandomImage() {
-            const enabledImages = allImages.filter(image => !disabledImages.includes(image.file));
-            if (enabledImages.length === 0) {
-                alert("No images left to choose from.");
-                return;
-            }
-            const randomIndex = Math.floor(Math.random() * enabledImages.length);
-            const randomImage = enabledImages[randomIndex];
-            randomImageElement.src = "images/" + randomImage.file;
-        }
-
-        function toggleImageStatus() {
-            const selectedImageFile = imageSelector.value;
-            if (disabledImages.includes(selectedImageFile)) {
-                disabledImages = disabledImages.filter(image => image !== selectedImageFile);
-            } else {
-                disabledImages.push(selectedImageFile);
-            }
-            updateDisabledImagesList();
-        }
-
-        function updateDisabledImagesList() {
-            if (disabledImages.length === 0) {
-                disabledImagesListElement.textContent = "No images disabled yet.";
-            } else {
-                const disabledDisplayNames = disabledImages
-                    .map(file => {
-                        const image = allImages.find(image => image.file === file);
-                        return image ? image.displayName : file;
-                    });
-                disabledImagesListElement.textContent = disabledDisplayNames.join("\n");
-            }
-        }
-
-        populateImageSelector();
-    </script>
+    <script src="js/image-picker.js"></script>
 </body>
 </html>

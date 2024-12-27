@@ -8,6 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            margin: 0;
         }
         .wheel-container {
             margin: 40px auto;
@@ -35,10 +36,53 @@
             margin-top: 20px;
             text-align: left;
         }
+        
+        /* Result Box (Overlay) */
+        #result-box {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's above all other content */
+        }
+
+        .result-content {
+            background-color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 500px;
+            width: 80%;
+        }
+
+        .result-content h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .close-button {
+            background-color: #ff4c4c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .close-button:hover {
+            background-color: #ff0000;
+        }
     </style>
 </head>
 <body>
-    <h1>Spinning Wheel</h1>
+    <h1>Name Picker</h1>
 
     <div class="wheel-container">
         <canvas id="wheel" width="500" height="500"></canvas>
@@ -52,102 +96,28 @@
         <select id="name-selector"></select>
         <button onclick="toggleNameStatus()">Disable/Enable Name</button>
 
+        <h3>Hide/Unhide Name</h3>
+        <button onclick="toggleNameVisibility()">Hide/Unhide Name</button>
+
+        <h3>Delete Name</h3>
+        <button onclick="deleteName()">Delete Name</button>
+
         <h3>Disabled Names</h3>
         <pre id="disabled-names-list">No names disabled yet.</pre>
+
+        <!-- Background color selector -->
+        <h3>Change Background Color</h3>
+        <input type="color" id="background-color-picker" onchange="setBackgroundColor()" value="#ffffff">
+
+        <!-- Result Box (Overlay) -->
+        <div id="result-box">
+            <div class="result-content">
+                <h2 id="result-text">Winner: None</h2>
+                <button class="close-button" onclick="closeResultBox()">Close</button>
+            </div>
+        </div>
     </div>
 
-    <script>
-        let names = ["Diya", "Charles", "Beatriz", "Ali", "Hanna", "Gabriel", "Fatima", "Eric"];
-        let disabledNames = [];
-        const nameSelector = document.getElementById("name-selector");
-        const disabledNamesList = document.getElementById("disabled-names-list");
-        const spinButton = document.getElementById("spin-button");
-        const canvas = document.getElementById("wheel");
-        const ctx = canvas.getContext("2d");
-
-        function drawWheel() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const sliceAngle = (2 * Math.PI) / names.length;
-
-            names.forEach((name, i) => {
-                const startAngle = i * sliceAngle;
-                const endAngle = startAngle + sliceAngle;
-
-                ctx.beginPath();
-                ctx.moveTo(canvas.width / 2, canvas.height / 2);
-                ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, startAngle, endAngle);
-                ctx.closePath();
-                ctx.fillStyle = i % 2 === 0 ? "#FFDDC1" : "#FFABAB";
-                ctx.fill();
-                ctx.stroke();
-
-                ctx.save();
-                ctx.translate(canvas.width / 2, canvas.height / 2);
-                ctx.rotate(startAngle + sliceAngle / 2);
-                ctx.textAlign = "right";
-                ctx.fillStyle = "#000";
-                ctx.font = "16px Arial";
-                ctx.fillText(name, canvas.width / 2 - 20, 10);
-                ctx.restore();
-            });
-
-            spinButton.disabled = names.length === 0;
-        }
-
-        function spinWheel() {
-            if (names.length === 0) {
-                alert("No names to spin.");
-                return;
-            }
-            const randomIndex = Math.floor(Math.random() * names.length);
-            alert(`Winner: ${names[randomIndex]}!`);
-        }
-
-        function addCustomName() {
-            const input = document.getElementById("custom-name-input");
-            const name = input.value.trim();
-            if (name && !names.includes(name)) {
-                names.push(name);
-                populateNameSelector();
-                drawWheel();
-            }
-            input.value = "";
-        }
-
-        function toggleNameStatus() {
-            const selectedName = nameSelector.value;
-            if (!selectedName) return;
-
-            if (disabledNames.includes(selectedName)) {
-                disabledNames = disabledNames.filter(name => name !== selectedName);
-                names.push(selectedName);
-            } else {
-                disabledNames.push(selectedName);
-                names = names.filter(name => name !== selectedName);
-            }
-            populateNameSelector();
-            updateDisabledNamesList();
-            drawWheel();
-        }
-
-        function updateDisabledNamesList() {
-            disabledNamesList.textContent = disabledNames.length
-                ? disabledNames.join("\n")
-                : "No names disabled yet.";
-        }
-
-        function populateNameSelector() {
-            nameSelector.innerHTML = "";
-            [...names, ...disabledNames].forEach(name => {
-                const option = document.createElement("option");
-                option.value = name;
-                option.textContent = name;
-                nameSelector.appendChild(option);
-            });
-        }
-
-        populateNameSelector();
-        drawWheel();
-    </script>
+        <script src="js/app.js"></script>
 </body>
 </html>
