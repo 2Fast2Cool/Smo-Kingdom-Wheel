@@ -79,6 +79,17 @@
         .close-button:hover {
             background-color: #ff0000;
         }
+
+        /* Navigation Buttons */
+        .navigation-buttons {
+            margin-top: 20px;
+        }
+
+        .navigation-buttons button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+        }
     </style>
 </head>
 <body>
@@ -118,6 +129,17 @@
         </div>
     </div>
 
-        <script src="js/app.js"></script>
+    <!-- Navigation Buttons -->
+    <div class="navigation-buttons">
+        <button onclick="navigateToPicker()">Go to Image Picker</button>
+    </div>
+
+    <script>
+        function navigateToPicker() {
+            window.location.href = "index.html";
+        }
+    </script>
+    <script src="js/app.js"></script>
 </body>
 </html>
+

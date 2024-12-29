@@ -1,3 +1,4 @@
+
 // Load settings from localStorage
 window.onload = function () {
     loadSettings();
@@ -5,7 +6,6 @@ window.onload = function () {
 
 let names = JSON.parse(localStorage.getItem('names')) || ["Diya", "Charles", "Beatriz", "Ali", "Hanna", "Gabriel", "Fatima", "Eric"];
 let disabledNames = JSON.parse(localStorage.getItem('disabledNames')) || [];
-let hiddenNames = JSON.parse(localStorage.getItem('hiddenNames')) || [];  // Store hidden names
 let backgroundColor = localStorage.getItem('backgroundColor') || "#ffffff"; // Default white background
 
 const nameSelector = document.getElementById("name-selector");
@@ -23,7 +23,6 @@ backgroundColorPicker.value = backgroundColor; // Set the color picker value
 function saveSettings() {
     localStorage.setItem('names', JSON.stringify(names));
     localStorage.setItem('disabledNames', JSON.stringify(disabledNames));
-    localStorage.setItem('hiddenNames', JSON.stringify(hiddenNames)); // Save hidden names
     localStorage.setItem('backgroundColor', backgroundColor);
 }
 
@@ -45,8 +44,6 @@ function drawWheel() {
     const sliceAngle = (2 * Math.PI) / names.length;
 
     names.forEach((name, i) => {
-        if (hiddenNames.includes(name)) return; // Skip drawing hidden names
-
         const startAngle = i * sliceAngle;
         const endAngle = startAngle + sliceAngle;
 
@@ -110,36 +107,6 @@ function toggleNameStatus() {
         disabledNames.push(selectedName);
         names = names.filter(name => name !== selectedName);
     }
-    saveSettings(); // Save settings
-    populateNameSelector();
-    updateDisabledNamesList();
-    drawWheel();
-}
-
-function toggleNameVisibility() {
-    const selectedName = nameSelector.value;
-    if (!selectedName) return;
-
-    if (hiddenNames.includes(selectedName)) {
-        hiddenNames = hiddenNames.filter(name => name !== selectedName); // Unhide
-    } else {
-        hiddenNames.push(selectedName); // Hide
-    }
-    saveSettings(); // Save settings
-    drawWheel();
-}
-
-function deleteName() {
-    const selectedName = nameSelector.value;
-    if (!selectedName) return;
-
-    // Remove name from both names and disabledNames
-    names = names.filter(name => name !== selectedName);
-    disabledNames = disabledNames.filter(name => name !== selectedName);
-
-    // If the name is hidden, remove from hiddenNames as well
-    hiddenNames = hiddenNames.filter(name => name !== selectedName);
-
     saveSettings(); // Save settings
     populateNameSelector();
     updateDisabledNamesList();

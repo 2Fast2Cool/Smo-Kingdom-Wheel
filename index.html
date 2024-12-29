@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Picker and Wheel</title>
+    <title>Smo Wheel and Name Picker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,7 +41,10 @@
     </style>
 </head>
 <body>
-    <h1>Image Picker</h1>
+    <h1>Smo Kingdom Picker</h1>
+
+    <!-- Navigation Button -->
+    <button onclick="navigateToWheel()">Go to Spinning Wheel</button>
 
     <!-- Background Color Picker -->
     <div id="color-picker-container">
@@ -74,6 +77,11 @@
     <h3>Image List</h3>
     <div id="image-list"></div>
 
+    <script>
+        function navigateToWheel() {
+            window.location.href = "spinning-wheel.html";
+        }
+    </script>
     <script src="js/image-picker.js"></script>
 </body>
 </html>
